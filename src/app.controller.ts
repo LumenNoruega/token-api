@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/await-thenable */
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
+import { MintTokenDto } from './dtos/mintToken.dto';
 
 @Controller()
 export class AppController {
@@ -40,5 +42,19 @@ export class AppController {
     return {result: hash};
   }
 
+  @Get('server-wallet-address')
+  getServerWalletAddress() {
+    return {result: this.appService.getServerWalletAddress()};
+  }
+
+  @Get('check-minter-role')
+  async checkMinterRole(@Query('address') address: string) {
+    return {result: await this.appService.checkMinterRole(address)};
+  }
+
+  @Post('mint-tokens')
+  async mintTokens(@Body() body: MintTokenDto) {
+    return {result: await this.appService.mintTokens(body.address)};
+  }
   
 }
